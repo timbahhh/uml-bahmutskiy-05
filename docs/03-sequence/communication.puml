@@ -1,0 +1,28 @@
+@startuml
+!include ../../_style.puml
+
+title Диаграмма коммуникации: отправка сообщения
+
+object "<u>:Пользователь</u>" as user
+object "<u>ui : ИнтерфейсМессенджера</u>" as ui
+object "<u>chat : Чат</u>" as chat
+object "<u>service : СервисСообщений</u>" as service
+object "<u>message : Сообщение</u>" as message
+object "<u>push : СервисPushУведомлений</u>" as push
+
+user -- ui : 1: открытьЧат(chatId) >
+ui -- chat : 1.1: получитьИсторию() >
+chat -- ui : 1.2: списокСообщений <
+user -- ui : 2: отправитьСообщение(текст) >
+ui -- service : 2.1: отправить(userId, chatId, текст) >
+service -- chat : 2.2: проверитьУчастие(userId) >
+chat -- service : 2.3: участиеПодтверждено <
+service -- message : 2.4: создать(текст, userId) >
+message -- service : 2.5: созданноеСообщение <
+service -- chat : 2.6: добавитьСообщение(message) >
+chat -- service : 2.7: сообщениеСохранено <
+service -- push : 2.8: уведомитьОНовомСообщении(message) >
+service -- ui : 3: результатОтправки <
+ui -- user : 4: показатьСтатусОтправки <
+
+@enduml
