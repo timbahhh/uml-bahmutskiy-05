@@ -1,0 +1,57 @@
+@startuml
+!include ../../_style.puml
+
+title ВИ-01 «Отправить сообщение»: исключения
+
+actor "Пользователь" as user
+participant "Интерфейс мессенджера" as ui
+participant "Сервис сообщений" as service
+participant "Чат" as chat
+participant "Сообщение" as message
+queue "Очередь сообщений" as queue
+
+user -> ui : отправитьСообщение(chatId, текст)
+activate ui
+
+ui -> service : отправить(userId, chatId, текст)
+activate service
+
+service -> chat : проверитьУчастие(userId)
+activate chat
+chat --> service : результатПроверки
+deactivate chat
+
+alt [пользователь не состоит в чате]
+    service --> ui : отказ("Нет доступа к чату")
+
+else [текст сообщения пустой]
+    service --> ui : отказ("Пустое сообщение")
+
+else [соединение с сервером отсутствует]
+    service ->> queue : сохранитьДляПовторнойОтправки(текст)
+    service --> ui : ошибка("Нет соединения")
+
+else [пользователь состоит в чате и текст корректен]
+    service -> message : создать(текст, userId)
+    activate message
+    message --> service : созданноеСообщение
+    deactivate message
+
+    service -> chat : сохранитьСообщение(message)
+    activate chat
+    chat --> service : сохранено
+    deactivate chat
+
+    opt [получатель находится офлайн]
+        service ->> queue : поместитьВОчередь(message)
+    end
+
+    service ->> queue : опубликоватьСобытиеНовоеСообщение(message)
+    service --> ui : сообщениеОтправлено
+end
+
+deactivate service
+ui --> user : показатьРезультат
+deactivate ui
+
+@enduml
