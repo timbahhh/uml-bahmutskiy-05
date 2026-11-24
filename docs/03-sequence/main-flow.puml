@@ -1,0 +1,51 @@
+@startuml
+!include ../../_style.puml
+
+title ВИ-01 «Отправить сообщение»: основной сценарий
+
+actor "Пользователь" as user
+participant "Интерфейс мессенджера" as ui
+participant "Чат" as chat
+participant "Сервис сообщений" as service
+participant "Сообщение" as message
+participant "Сервис push-уведомлений" as push
+
+user -> ui : открытьЧат(chatId)
+activate ui
+
+ui -> chat : получитьИсторию()
+activate chat
+chat --> ui : списокСообщений
+deactivate chat
+
+user -> ui : ввестиТекст(текст)
+user -> ui : отправитьСообщение(текст)
+ui -> service : отправить(userId, chatId, текст)
+activate service
+
+service -> chat : проверитьУчастие(userId)
+activate chat
+chat --> service : участиеПодтверждено
+deactivate chat
+
+service -> message : создать(текст, userId)
+activate message
+message --> service : созданноеСообщение
+deactivate message
+
+service -> chat : добавитьСообщение(message)
+activate chat
+chat --> service : сообщениеСохранено
+deactivate chat
+
+opt получатель находится онлайн
+    service ->> push : уведомитьОНовомСообщении(message)
+end
+
+service --> ui : результатОтправки
+deactivate service
+
+ui --> user : показатьСтатусОтправки
+deactivate ui
+
+@enduml
