@@ -1,0 +1,43 @@
+@startuml
+!include ../../_style.puml
+
+left to right direction
+
+actor "Пользователь" as User
+actor "Администратор" as Admin
+actor "Сервис push-уведомлений" as Push <<system>>
+
+Admin --|> User
+
+rectangle "Мессенджер" {
+    usecase "Зарегистрироваться" as UC_Register
+    usecase "Войти в систему" as UC_Login
+    usecase "Создать личный чат" as UC_Personal
+    usecase "Создать групповой чат" as UC_Group
+    usecase "Отправить сообщение" as UC_Send
+    usecase "Проверить участие\nв чате" as UC_Check
+    usecase "Просмотреть статус\nпользователя" as UC_Status
+    usecase "Получить сообщения" as UC_Receive
+    usecase "Сохранить сообщение\nдля офлайн-получателя" as UC_Save
+    usecase "Отправить push-\nуведомление" as UC_Push
+}
+
+User -- UC_Register
+User -- UC_Login
+User -- UC_Personal
+User -- UC_Group
+User -- UC_Send
+User -- UC_Status
+User -- UC_Receive
+
+Admin -- UC_Login
+
+UC_Send ..> UC_Check : <<include>>
+
+UC_Save ..> UC_Send : <<extend>>\n[получатель офлайн]
+
+UC_Save ..> UC_Push : <<include>>
+
+Push -- UC_Push
+
+@enduml
