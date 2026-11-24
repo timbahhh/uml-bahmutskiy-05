@@ -1,0 +1,34 @@
+@startuml
+!include <C4/C4_Container>
+
+title Уровень 2 — Containers: Мессенджер
+
+Person(user, "Пользователь")
+Person(admin, "Администратор")
+
+System_Boundary(messenger, "Мессенджер") {
+    Container(web, "Веб-клиент", "React", "Интерфейс для общения в браузере")
+    Container(mobile, "Мобильное приложение", "Kotlin / Swift", "Общение со смартфона")
+    Container(api, "Backend API", "Java / Spring Boot", "Бизнес-логика и обработка запросов")
+    Container(worker, "Обработчик сообщений", "Java", "Фоновая доставка сообщений")
+    ContainerDb(db, "Основная БД", "PostgreSQL", "Пользователи, чаты и сообщения")
+    ContainerQueue(queue, "Очередь сообщений", "RabbitMQ", "Хранение событий доставки")
+}
+
+System_Ext(push, "Push-сервис", "Внешние уведомления")
+System_Ext(auth, "Сервис аутентификации", "Проверка учётных записей")
+
+Rel(user, web, "Пользуется", "HTTPS")
+Rel(user, mobile, "Пользуется", "HTTPS")
+Rel(admin, web, "Управляет системой", "HTTPS")
+Rel(web, api, "Отправляет запросы", "JSON/HTTPS")
+Rel(mobile, api, "Отправляет запросы", "JSON/HTTPS")
+Rel(api, db, "Читает и записывает данные", "JDBC")
+Rel(api, queue, "Публикует события", "AMQP")
+Rel(queue, worker, "Передаёт события", "AMQP")
+Rel(worker, db, "Обновляет статусы сообщений", "JDBC")
+Rel(worker, push, "Отправляет уведомления", "HTTPS")
+Rel(api, auth, "Проверяет пользователя", "HTTPS")
+
+SHOW_LEGEND()
+@enduml

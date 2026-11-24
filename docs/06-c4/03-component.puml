@@ -1,0 +1,44 @@
+@startuml
+!include <C4/C4_Component>
+
+title Уровень 3 — Components: Backend API
+
+Person(user, "Пользователь")
+
+Container(web, "Веб-клиент", "React")
+Container(mobile, "Мобильное приложение", "Kotlin / Swift")
+
+Container_Boundary(api, "Backend API") {
+    Component(authController, "AuthController", "Spring MVC", "Обработка запросов аутентификации")
+    Component(chatController, "ChatController", "Spring MVC", "Управление чатами")
+    Component(messageController, "MessageController", "Spring MVC", "Обработка отправки сообщений")
+    Component(authService, "AuthService", "Java", "Проверка учётной записи")
+    Component(chatService, "ChatService", "Java", "Создание и управление чатами")
+    Component(messageService, "MessageService", "Java", "Создание и отправка сообщений")
+    Component(chatRepository, "ChatRepository", "Spring Data", "Доступ к данным чатов")
+    Component(messageRepository, "MessageRepository", "Spring Data", "Доступ к сообщениям")
+    Component(eventPublisher, "EventPublisher", "Spring AMQP", "Публикация событий доставки")
+}
+
+ContainerDb(db, "Основная БД", "PostgreSQL")
+ContainerQueue(queue, "Очередь сообщений", "RabbitMQ")
+
+Rel(user, web, "Использует", "HTTPS")
+Rel(user, mobile, "Использует", "HTTPS")
+Rel(web, authController, "Вызывает", "JSON/HTTPS")
+Rel(web, chatController, "Вызывает", "JSON/HTTPS")
+Rel(web, messageController, "Вызывает", "JSON/HTTPS")
+Rel(mobile, messageController, "Вызывает", "JSON/HTTPS")
+
+Rel(authController, authService, "Вызывает")
+Rel(chatController, chatService, "Вызывает")
+Rel(messageController, messageService, "Вызывает")
+Rel(chatService, chatRepository, "Использует")
+Rel(messageService, messageRepository, "Использует")
+Rel(messageService, eventPublisher, "Публикует событие")
+Rel(chatRepository, db, "Читает и записывает", "JDBC")
+Rel(messageRepository, db, "Читает и записывает", "JDBC")
+Rel(eventPublisher, queue, "Отправляет событие", "AMQP")
+
+SHOW_LEGEND()
+@enduml

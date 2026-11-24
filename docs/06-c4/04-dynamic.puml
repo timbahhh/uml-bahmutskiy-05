@@ -1,0 +1,24 @@
+@startuml
+!include <C4/C4_Dynamic>
+
+title Динамический вид C4: сценарий «Отправка сообщения»
+
+Person(user, "Пользователь")
+
+Container(web, "Веб-клиент", "React")
+Container(api, "Backend API", "Spring Boot")
+ContainerDb(db, "Основная БД", "PostgreSQL")
+ContainerQueue(queue, "Очередь сообщений", "RabbitMQ")
+Container(worker, "Обработчик сообщений", "Java")
+System_Ext(push, "Push-сервис", "Внешние уведомления")
+
+RelIndex(1, user, web, "Вводит текст и нажимает «Отправить»")
+RelIndex(2, web, api, "Отправляет запрос", "JSON/HTTPS")
+RelIndex(3, api, db, "Проверяет участие в чате")
+RelIndex(4, api, db, "Сохраняет сообщение")
+RelIndex(5, api, queue, "Публикует событие отправки", "AMQP")
+RelIndex(6, queue, worker, "Передаёт событие", "AMQP")
+RelIndex(7, worker, db, "Обновляет статус доставки")
+RelIndex(8, worker, push, "Отправляет уведомление", "HTTPS")
+
+@enduml

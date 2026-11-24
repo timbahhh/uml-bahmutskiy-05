@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Context>
+
+title Уровень 1 — System Context: Мессенджер
+
+Person(user, "Пользователь", "Общается в личных и групповых чатах")
+Person(admin, "Администратор", "Управляет пользователями и системой")
+
+System(messenger, "Мессенджер", "Обмен сообщениями между пользователями")
+
+System_Ext(push, "Push-сервис", "Отправляет уведомления пользователям")
+System_Ext(auth, "Сервис аутентификации", "Проверяет учётные данные пользователей")
+
+Rel(user, messenger, "Отправляет и получает сообщения", "HTTPS")
+Rel(admin, messenger, "Управляет системой", "HTTPS")
+Rel(messenger, push, "Отправляет push-уведомления", "HTTPS")
+Rel(messenger, auth, "Проверяет пользователя", "HTTPS")
+
+SHOW_LEGEND()
+@enduml
