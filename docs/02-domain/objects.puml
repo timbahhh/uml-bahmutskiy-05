@@ -1,0 +1,69 @@
+@startuml
+!include ../../_style.puml
+
+title Мессенджер: диаграмма объектов
+
+object "user1 : Пользователь" as user1 {
+    id = 1
+    имя = "Алексей"
+    email = "alex@example.com"
+    статус = ONLINE
+}
+
+object "user2 : Пользователь" as user2 {
+    id = 2
+    имя = "Мария"
+    email = "maria@example.com"
+    статус = OFFLINE
+}
+
+object "account1 : УчетнаяЗапись" as account1 {
+    логин = "alex"
+    датаРегистрации = "2026-10-10"
+}
+
+object "account2 : УчетнаяЗапись" as account2 {
+    логин = "maria"
+    датаРегистрации = "2026-10-12"
+}
+
+object "chat1 : ГрупповойЧат" as chat1 {
+    id = 101
+    название = "Учебная группа"
+    датаСоздания = "2026-10-15"
+}
+
+object "participation1 : УчастиеВЧате" as participation1 {
+    датаДобавления = "2026-10-15"
+    роль = "Администратор"
+}
+
+object "participation2 : УчастиеВЧате" as participation2 {
+    датаДобавления = "2026-10-16"
+    роль = "Участник"
+}
+
+object "message1 : Сообщение" as message1 {
+    id = 501
+    текст = "Всем привет!"
+    датаОтправки = "2026-11-24 19:30"
+    статус = DELIVERED
+}
+
+' Связи объектов
+user1 *-- account1
+user2 *-- account2
+
+chat1 o-- user1
+chat1 o-- user2
+
+user1 -- participation1
+chat1 -- participation1
+
+user2 -- participation2
+chat1 -- participation2
+
+chat1 *-- message1
+user1 -- message1 : отправитель
+
+@enduml
