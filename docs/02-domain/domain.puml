@@ -54,10 +54,14 @@ package "Общение" {
     }
 
     enum DeliveryStatus {
-        SENT
+        CREATED
+        SAVED
+        PENDING
+        DELIVERING
         DELIVERED
         READ
-        PENDING
+        FAILED
+        CANCELLED
     }
 }
 
