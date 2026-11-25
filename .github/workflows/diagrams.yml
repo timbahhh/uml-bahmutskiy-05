@@ -2,13 +2,8 @@ name: Render diagrams
 
 on:
   push:
-    paths:
-      - 'docs/**/*.puml'
-      - '_style.puml'
   pull_request:
-    paths:
-      - 'docs/**/*.puml'
-      - '_style.puml'
+  workflow_dispatch:
 
 jobs:
   render:
@@ -23,22 +18,28 @@ jobs:
           java-version: '21'
 
       - name: Install Graphviz
-        run: sudo apt-get update && sudo apt-get install -y graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
 
       - name: Download PlantUML
         run: |
-          curl -sSL -o plantuml.jar \
+          curl -fL -o plantuml.jar \
             https://github.com/plantuml/plantuml/releases/download/v1.2025.2/plantuml-1.2025.2.jar
 
       - name: Render PNG
         run: |
           mkdir -p out/png
-          java -jar plantuml.jar -failfast2 -tpng -o "$PWD/out/png" "docs/**/*.puml"
+          find docs -type f -name '*.puml' -print0 | while IFS= read -r -d '' file; do
+            java -jar plantuml.jar -failfast2 -tpng -o "$GITHUB_WORKSPACE/out/png" "$file"
+          done
 
       - name: Render SVG
         run: |
           mkdir -p out/svg
-          java -jar plantuml.jar -failfast2 -tsvg -o "$PWD/out/svg" "docs/**/*.puml"
+          find docs -type f -name '*.puml' -print0 | while IFS= read -r -d '' file; do
+            java -jar plantuml.jar -failfast2 -tsvg -o "$GITHUB_WORKSPACE/out/svg" "$file"
+          done
 
       - uses: actions/upload-artifact@v4
         with:
