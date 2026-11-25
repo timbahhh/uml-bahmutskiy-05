@@ -1,0 +1,19 @@
+@startuml
+
+
+title Отправка сообщения офлайн-пользователю
+
+actor "Отправитель" as sender
+participant "Интерфейс мессенджера" as ui
+participant "API сервера" as api
+participant "Сервис присутствия" as presence
+database "База данных" as db
+
+sender -> ui : Вводит и отправляет сообщение
+ui -> api : Передаёт текст сообщения
+api -> presence : Проверяет статус получателя
+presence --> api : Получатель офлайн
+api -> db : Сохраняет сообщение со статусом «ожидает доставки»
+db --> api : Подтверждает сохранение
+
+@enduml

@@ -1,5 +1,4 @@
 @startuml
-!include <C4/C4_Context>
 
 title Уровень 1 — System Context: Мессенджер
 

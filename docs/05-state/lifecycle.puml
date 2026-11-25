@@ -1,5 +1,4 @@
 @startuml
-!include ../../_style.puml
 
 title Жизненный цикл сообщения в мессенджере
 hide empty description

@@ -1,5 +1,4 @@
 @startuml
-!include <C4/C4_Container>
 
 title Уровень 2 — Containers: Мессенджер
 

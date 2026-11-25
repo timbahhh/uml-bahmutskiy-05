@@ -1,5 +1,4 @@
 @startuml
-!include <C4/C4_Dynamic>
 
 title Динамический вид C4: сценарий «Отправка сообщения»
 

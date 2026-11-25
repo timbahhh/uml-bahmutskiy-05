@@ -1,0 +1,28 @@
+@startuml
+
+
+left to right direction
+
+actor "Пользователь" as user
+actor "Администратор" as admin
+actor "Сервис уведомлений" as notification <<system>>
+
+rectangle "Мессенджер" {
+
+    usecase "Зарегистрироваться" as UC1
+    usecase "Отправить сообщение" as UC2
+    usecase "Создать групповой чат" as UC3
+    usecase "Просмотреть статус\nпользователя" as UC4
+    usecase "Получить сообщения\nпосле подключения" as UC5
+}
+
+user -- UC1
+user -- UC2
+user -- UC3
+user -- UC4
+user -- UC5
+
+admin -- UC1
+notification -- UC5
+
+@enduml

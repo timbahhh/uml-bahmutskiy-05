@@ -1,5 +1,4 @@
 @startuml
-!include <C4/C4_Component>
 
 title Уровень 3 — Components: Backend API
 

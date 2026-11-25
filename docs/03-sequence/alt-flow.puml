@@ -1,5 +1,4 @@
 @startuml
-!include ../../_style.puml
 
 title ВИ-01 «Отправить сообщение»: исключения
 

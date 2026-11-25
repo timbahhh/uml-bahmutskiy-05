@@ -1,5 +1,4 @@
 @startuml
-!include ../../_style.puml
 
 title Мессенджер: диаграмма объектов
 
