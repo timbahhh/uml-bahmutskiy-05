@@ -1,6 +1,4 @@
 @startuml
-!include ../../_style.puml
-
 title Процесс «Отправка сообщения»
 
 |Пользователь|
